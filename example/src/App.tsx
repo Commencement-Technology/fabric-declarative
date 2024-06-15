@@ -1,12 +1,21 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
+import { Alert, StyleSheet, View } from 'react-native';
 import { FabricDeclarativeView } from 'react-native-fabric-declarative';
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <FabricDeclarativeView color="#32a852" style={styles.box} />
+      <FabricDeclarativeView
+        style={styles.box}
+        title="Fill the form"
+        options={[3.1415, 2.7182, 1.618, 186.282]}
+        onSubmit={({ nativeEvent }) => {
+          const title = 'Result';
+          const message = JSON.stringify(nativeEvent);
+          Alert.alert(title, message);
+        }}
+      />
     </View>
   );
 }
@@ -18,8 +27,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   box: {
-    width: 60,
-    height: 60,
+    width: '100%',
+    height: '100%',
     marginVertical: 20,
   },
 });

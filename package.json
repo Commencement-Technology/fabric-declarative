@@ -7,6 +7,19 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
+  "scripts": {
+    "example": "yarn workspace react-native-fabric-declarative-example",
+    "example:start": "yarn example start",
+    "example:pod-install": "cd example/ios && pod install",
+    "open:xcode": "xed example/ios",
+    "open:android-studio": "open -a \"Android Studio\" example/android",
+    "test": "jest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
+    "prepare": "bob build",
+    "release": "release-it"
+  },
   "files": [
     "src",
     "lib",
@@ -25,15 +38,6 @@
     "!**/__mocks__",
     "!**/.*"
   ],
-  "scripts": {
-    "example": "yarn workspace react-native-fabric-declarative-example",
-    "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
-    "release": "release-it"
-  },
   "keywords": [
     "react-native",
     "ios",
@@ -54,7 +58,6 @@
   },
   "devDependencies": {
     "@commitlint/config-conventional": "^17.0.2",
-    "@evilmartians/lefthook": "^1.5.0",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
     "@types/jest": "^29.5.5",
