@@ -20,6 +20,8 @@ class FabricDeclarativeView : LinearLayout {
     configureComponent(context)
   }
 
+  internal lateinit var viewModel: JetpackComposeViewModel
+
   private fun configureComponent(context: Context) {
 
     layoutParams = LayoutParams(
@@ -33,8 +35,10 @@ class FabricDeclarativeView : LinearLayout {
         LayoutParams.WRAP_CONTENT
       )
 
+      viewModel = JetpackComposeViewModel()
+
       it.setContent {
-        JetpackComposeView()
+        JetpackComposeView(viewModel = viewModel)
       }
 
       addView(it)

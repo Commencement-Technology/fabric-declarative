@@ -5,6 +5,7 @@ import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
+import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerInterface
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerDelegate
 
@@ -33,12 +34,18 @@ class FabricDeclarativeViewManager : SimpleViewManager<FabricDeclarativeView>(),
     const val NAME = "FabricDeclarativeView"
   }
 
+  @ReactProp(name = "title")
   override fun setTitle(view: FabricDeclarativeView?, value: String?) {
-    //TODO("Not yet implemented")
+    view?.viewModel?.updateTitle(value ?: "")
   }
 
+  @ReactProp(name = "options")
   override fun setOptions(view: FabricDeclarativeView?, value: ReadableArray?) {
-    //TODO("Not yet implemented")
+    if(value == null) {
+      return
+    }
+
+    view?.viewModel?.updateOptions(value.toArrayList() as ArrayList<Double>)
   }
 
 }
