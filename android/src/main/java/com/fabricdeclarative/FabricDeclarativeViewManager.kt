@@ -1,11 +1,10 @@
 package com.fabricdeclarative
 
-import android.graphics.Color
+import com.facebook.react.bridge.ReadableArray
 import com.facebook.react.module.annotations.ReactModule
 import com.facebook.react.uimanager.SimpleViewManager
 import com.facebook.react.uimanager.ThemedReactContext
 import com.facebook.react.uimanager.ViewManagerDelegate
-import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerInterface
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerDelegate
 
@@ -30,12 +29,16 @@ class FabricDeclarativeViewManager : SimpleViewManager<FabricDeclarativeView>(),
     return FabricDeclarativeView(context)
   }
 
-  @ReactProp(name = "color")
-  override fun setColor(view: FabricDeclarativeView?, color: String?) {
-    view?.setBackgroundColor(Color.parseColor(color))
-  }
-
   companion object {
     const val NAME = "FabricDeclarativeView"
   }
+
+  override fun setTitle(view: FabricDeclarativeView?, value: String?) {
+    //TODO("Not yet implemented")
+  }
+
+  override fun setOptions(view: FabricDeclarativeView?, value: ReadableArray?) {
+    //TODO("Not yet implemented")
+  }
+
 }
