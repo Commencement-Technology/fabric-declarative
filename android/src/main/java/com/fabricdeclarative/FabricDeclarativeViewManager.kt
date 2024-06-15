@@ -8,6 +8,7 @@ import com.facebook.react.uimanager.ViewManagerDelegate
 import com.facebook.react.uimanager.annotations.ReactProp
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerInterface
 import com.facebook.react.viewmanagers.FabricDeclarativeViewManagerDelegate
+import com.facebook.react.common.MapBuilder
 
 @ReactModule(name = FabricDeclarativeViewManager.NAME)
 class FabricDeclarativeViewManager : SimpleViewManager<FabricDeclarativeView>(),
@@ -47,5 +48,9 @@ class FabricDeclarativeViewManager : SimpleViewManager<FabricDeclarativeView>(),
 
     view?.viewModel?.updateOptions(value.toArrayList() as ArrayList<Double>)
   }
+
+  override fun getExportedCustomDirectEventTypeConstants(): MutableMap<String, Any> = mutableMapOf(
+    SubmitEvent.EVENT_NAME to MapBuilder.of("registrationName", "onSubmit")
+  )
 
 }

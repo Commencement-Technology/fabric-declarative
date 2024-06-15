@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.compose.ui.platform.ComposeView
+import com.facebook.react.bridge.ReactContext
+import com.facebook.react.uimanager.UIManagerHelper
 
 class FabricDeclarativeView : LinearLayout {
   constructor(context: Context) : super(context) {
@@ -38,7 +40,26 @@ class FabricDeclarativeView : LinearLayout {
       viewModel = JetpackComposeViewModel()
 
       it.setContent {
-        JetpackComposeView(viewModel = viewModel)
+        JetpackComposeView(
+          viewModel = viewModel,
+          onSubmit = { inputString, selectedNumber, restNumbers->
+
+            val surfaceId = UIManagerHelper.getSurfaceId(context)
+            val viewId = this.id
+
+            UIManagerHelper
+              .getEventDispatcherForReactTag(context as ReactContext, viewId)
+              ?.dispatchEvent(
+                SubmitEvent(
+                  surfaceId,
+                  viewId,
+                  inputString,
+                  selectedNumber,
+                  restNumbers
+                )
+              )
+          }
+        )
       }
 
       addView(it)

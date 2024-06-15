@@ -31,9 +31,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import com.facebook.react.bridge.Arguments
+import com.facebook.react.bridge.WritableMap
+import com.facebook.react.uimanager.events.Event
 
 @Composable
-fun JetpackComposeView(viewModel: JetpackComposeViewModel) {
+fun JetpackComposeView(
+  viewModel: JetpackComposeViewModel,
+  onSubmit: (inputString: String, selectedNumber :Double, restNumbers: ArrayList<Double>) -> Unit
+) {
 
   val title by viewModel.title.collectAsState()
   val dropdownOptions by viewModel.options.collectAsState()
@@ -105,7 +111,15 @@ fun JetpackComposeView(viewModel: JetpackComposeViewModel) {
         )
 
         Button(
-          onClick = {  }
+          onClick = {
+            val restNumbers = ArrayList(dropdownOptions.filter { it != selectedOption  })
+
+            onSubmit(
+              inputString,
+              selectedOption,
+              restNumbers
+            )
+          }
         ) {
           Text(text = "Submit")
         }
@@ -144,8 +158,45 @@ class JetpackComposeViewModel : ViewModel() {
   }
 }
 
+
+class SubmitEvent(
+  surfaceId: Int,
+  viewId: Int,
+  val inputString: String,
+  val selectedNumber: Double,
+  val restNumbers: ArrayList<Double>
+) : Event<SubmitEvent>(surfaceId, viewId) {
+  override fun getEventName() = EVENT_NAME
+
+  // All events for a given view can be coalesced.
+  override fun getCoalescingKey(): Short = 0
+
+  override fun getEventData(): WritableMap? = Arguments.createMap().also {
+
+    it.putString("input", inputString)
+    it.putDouble("selectedNumber", selectedNumber)
+
+    it.putMap("objectResults", Arguments.createMap().also {map ->
+
+      val resultNumbers = Arguments.createArray().also { arr ->
+        restNumbers.forEach{ number -> arr.pushDouble(number) }
+      }
+
+      map.putArray("restNumbers", resultNumbers)
+      map.putString("uppercaseInput", inputString.uppercase())
+    })
+  }
+
+  companion object {
+    const val EVENT_NAME = "onSubmit"
+  }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun JetpackComposeViewPreview() {
-  JetpackComposeView(viewModel = JetpackComposeViewModel())
+  JetpackComposeView(
+    viewModel = JetpackComposeViewModel(),
+    onSubmit = { inputString, selectedNumber, restNumbers ->  }
+  )
 }
