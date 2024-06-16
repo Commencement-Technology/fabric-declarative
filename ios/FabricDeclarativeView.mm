@@ -37,7 +37,7 @@ using namespace facebook::react;
     _manager = [[SwiftUIViewManager alloc] init];
 
     self.contentView = [_manager getView];
-      
+
   }
 
   return self;
@@ -47,6 +47,22 @@ using namespace facebook::react;
 {
     const auto &oldViewProps = *std::static_pointer_cast<FabricDeclarativeViewProps const>(_props);
     const auto &newViewProps = *std::static_pointer_cast<FabricDeclarativeViewProps const>(props);
+
+    if(oldViewProps.title != newViewProps.title) {
+        NSString* newTitle = [[NSString alloc] initWithUTF8String: newViewProps.title.c_str()];
+
+        [_manager updateTitleWithNewTitle:newTitle];
+    }
+
+    if(oldViewProps.options != newViewProps.options) {
+        NSMutableArray<NSNumber*> *newOptions = [[NSMutableArray alloc] init];
+
+        for (double option : newViewProps.options) {
+            [newOptions addObject:@(option)];
+        }
+
+        [_manager updateOptionsWithNewOptions:newOptions];
+    }
 
     [super updateProps:props oldProps:oldProps];
 }

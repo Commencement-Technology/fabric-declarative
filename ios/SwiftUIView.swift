@@ -8,26 +8,31 @@
 import SwiftUI
 
 struct SwiftUIView: View {
+
+    @StateObject var viewModel: SwiftUIViewModel
+
     var body: some View {
         VStack {
-            Text("Title")
+            Text(viewModel.title)
                 .font(.title)
-            
+
             TextField("Input text", text: .constant(""))
                 .textFieldStyle(.roundedBorder)
-            
+
             Picker(
                 "Flavor",
-                selection: .constant(1)
+                selection: $viewModel.selectedOption
             ) {
-                ForEach(1..<3, id: \.self) { num in
-                    Text("Number: \(num)")
+                ForEach(viewModel.options, id: \.self) { num in
+                    HStack {
+                        Text("Number: \(num)")
+                    }
                 }
             }
             .padding()
-            
-            
-            
+
+
+
             Button(action: {}) {
                 Text("Submit")
                     .fontWeight(.bold)
@@ -43,17 +48,40 @@ struct SwiftUIView: View {
 }
 
 
+
+class SwiftUIViewModel : ObservableObject {
+    @Published var title: String = ""
+    @Published var options: [Double] = []
+    @Published var selectedOption: Double = 0
+}
+
 @objc public class SwiftUIViewManager: NSObject {
-    
+
     private let hostingController: UIHostingController<SwiftUIView>
-    
+    private let viewModel: SwiftUIViewModel
+
     @objc public override init() {
-        hostingController = UIHostingController(rootView: SwiftUIView())
+        viewModel = SwiftUIViewModel()
+
+        hostingController = UIHostingController(
+            rootView: SwiftUIView(
+                viewModel: self.viewModel
+            )
+        )
+
         super.init()
     }
-    
+
     @objc public func getView() -> UIView {
         return hostingController.view
     }
-    
+
+    @objc public func updateTitle(newTitle: String) {
+        viewModel.title = newTitle
+    }
+
+    @objc public func updateOptions(newOptions: [Double]) {
+        viewModel.options = newOptions
+    }
+
 }
