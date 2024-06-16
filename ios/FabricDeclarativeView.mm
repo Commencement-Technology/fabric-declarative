@@ -20,7 +20,7 @@ using namespace facebook::react;
 @end
 
 @implementation FabricDeclarativeView {
-    SwiftUIViewManager * _manager;
+    SwiftUIViewManager* _manager;
 }
 
 + (ComponentDescriptorProvider)componentDescriptorProvider
@@ -36,7 +36,12 @@ using namespace facebook::react;
 
     _manager = [[SwiftUIViewManager alloc] init];
 
+
     self.contentView = [_manager getView];
+
+    _manager.onSubmit = ^(NSString* inputString, double selectedNumber, NSArray<NSNumber*>* restNumbers) {
+      [self handleSubmit:inputString selectedNumber:selectedNumber restNumbers:restNumbers];
+    };
 
   }
 
@@ -71,5 +76,31 @@ Class<RCTComponentViewProtocol> FabricDeclarativeViewCls(void)
 {
     return FabricDeclarativeView.class;
 }
+
+
+- (void)handleSubmit:(NSString*)inputString selectedNumber:(double)selectedNumber restNumbers:(NSArray<NSNumber*>*) restNumbers
+{
+  if(!_eventEmitter) {
+    return;
+  }
+
+  std::vector<double> restNumbersVector = {};
+
+  for (NSNumber* num in restNumbers) {
+      restNumbersVector.push_back([num doubleValue]);
+  }
+
+  FabricDeclarativeViewEventEmitter::OnSubmit event = {
+    .input = [inputString UTF8String],
+    .selectedNumber = selectedNumber,
+    .objectResults = {
+      .restNumbers = restNumbersVector,
+      .uppercaseInput = [[inputString uppercaseString] UTF8String]
+    }
+  };
+
+  std::dynamic_pointer_cast<const FabricDeclarativeViewEventEmitter>(self->_eventEmitter)->onSubmit(event);
+}
+
 
 @end
